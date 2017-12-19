@@ -1,0 +1,39 @@
+spring:
+  profiles.active: local
+  
+---
+spring:
+    profiles: local
+server:
+    port: 8081
+    context-path: /CREDO-Operations
+
+ldap:
+  basedn: dc=MOCR-NT1,dc=OTSUKA,dc=com
+  url: ldap://z1mocrdc03.mocr-nt1.otsuka.com:3268
+  userdn: service_ds
+  password: DS_Otsuka@123
+---
+spring:
+    profiles: test
+server:
+    port: 8081
+    context-path: /CREDO-Operations
+
+ldap:
+  basedn: dc=MOCR-NT1,dc=OTSUKA,dc=com
+  url: ldap://z1mocrdc03.mocr-nt1.otsuka.com:3268
+  userdn: service_ds
+  password: DS_Otsuka@123  
+---
+spring:
+    profiles: uat
+server:
+    port: 0
+---
+
+spring:
+    profiles: prod
+server:
+    port: 0
+    
