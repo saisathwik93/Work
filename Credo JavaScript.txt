@@ -1,0 +1,35 @@
+
+ 
+var u = session.getUser(userName);
+var privilege =u.getString("user_privileges");
+var action ="CheckOut";
+//var action = "CancelCheckOut";
+var uname = u.getString("user_address").toLowerCase();
+
+
+ var portalurl ="10.18.30.29:8080/springboot-angularjs-credo/index.html?uname="+uname;
+ 
+var is = new java.net.URL("http://10.18.30.29:8080/springboot-angularjs-credo/isPendingTrainings?uname="+ uname + "&action="+ action).openStream();
+try {
+    
+        var rd = new java.io.BufferedReader(new java.io.InputStreamReader(is));
+        var sb = new java.lang.StringBuilder();
+		var cp;
+		while ((cp = rd.read()) != -1) {
+		  sb.append(new java.lang.Character(cp));
+		}
+    var jsonText =   sb.toString();
+  //  
+    if(jsonText=="false"){
+        
+        throw "You having pending training :<a href='http://" + portalurl + "' target='_blank'>Click here to Redirect Leraning AI Apps</a>";
+    }
+    } finally {
+      is.close();
+}
+
+
+
+
+
+
