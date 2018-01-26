@@ -20,7 +20,8 @@ try {
 		}
     var jsonText =   sb.toString();
   //  
-    if(jsonText=="false"){
+    if(jsonText=="false")
+{
         
         throw "You having pending training :<a href='http://" + portalurl + "' target='_blank'>Click here to Redirect Leraning AI Apps</a>";
     }
