@@ -112,7 +112,7 @@ app.controller("listController", ["$scope","dataShare",
 app.controller('ModalInstanceCtrl', function($scope, $uibModalInstance, user, $http, Notification, dataShare,
 		config) {
 
-	$scope.userid = user.userid;
+	
 	$scope.username = user.username;
 	$scope.roles = user.previleges;
 	$scope.privileges = user.actions;

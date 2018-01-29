@@ -1,4 +1,4 @@
-<html>
+<!-- <html>
 <head>
 <meta charset="UTF-8">
 <title>Otsuka User details</title>
@@ -17,7 +17,7 @@ modal-footer {
 </head>
 <body>
 
-	<!-- <div class="jumbotron"> -->
+	<div class="jumbotron">
 		<div style = "position:absolute;top:10px;right:0;margin-right: 25px;">
 		<a href="#/login" class="btn btn-default btn-md"> <span
 			class="glyphicon glyphicon-log-out"></span> Log out
@@ -32,7 +32,7 @@ modal-footer {
 		<h2 align="center" style="color: #428bca">Learning AI Admin
 			Console</h2>
 			</div>
-	<!-- </div> -->
+	</div>
 
 	<div ng-show="!status" class="alert alert-danger fade in"
 		style="text-align: center !important;">
@@ -83,8 +83,8 @@ modal-footer {
 											ng-if="toggle[$index]"></span>
 									</a></td>
 									
-									<!-- <td><input name="empId{{$index}}" ng-model="user.userid"
-										class="form-control" readonly="" /></td> -->
+									<td><input name="empId{{$index}}" ng-model="user.userid"
+										class="form-control" readonly="" /></td>
 
 									<td><input name="firstName{{$index}}" 
 										ng-model="user.username" class="form-control" readonly="" /></td>
@@ -172,6 +172,295 @@ modal-footer {
 									<td class="padme">
 										<p
 											ng-repeat="yoe in user.years | limitTo: (1 - user.years.length)  track by $index">
+											{{yoe}}</p>
+									</td>
+									<td></td>
+								</tr>
+							</tbody>
+
+						</table>
+					</form>
+					<div class="clearfix"></div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+ 
+	<script type="text/ng-template" id="userModel.html">
+      <div class="modal-header">
+        <h3 class="modal-title">User Detail</h3>
+      </div>
+      <div class="modal-body">
+      <form name="userForm" method="post" class="form-horizontal">
+    
+
+    <div class="form-group">
+        <label class="col-xs-3 control-label">User Name</label>
+        <div class="col-xs-5">
+			<label for="username" ng-model="username" class="form-control" name = "user_name" />
+            
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-3 control-label">Roles</label>
+        <div class="col-xs-5">
+            <input type="text" ng-model="roles" class="form-control" name="user_roles" disabled="disabled"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-3 control-label">Privileges</label>
+        <div class="col-xs-5">
+            <input type="text" ng-model="privileges" class="form-control" name="user_privileges" disabled="disabled"/>
+        </div>
+    </div>
+
+  <div class="form-group">
+        <label class="col-xs-3 control-label">Skills/Experience</label>
+        <div class="col-sm-4">
+     <span>
+          <input ng-repeat="jd in jd track by $index" type="text" ng-model="jd" class="form-control" name="jd[]" />
+</span>
+    </div>
+    <div class="col-sm-2" >
+      <span >
+          <input ng-repeat="y in years track by $index" type="text" ng-model="y" class="form-control" name="years[]" ng-blur ="validate(y)"/></span>    
+    </div>
+	</div>
+
+  <div class="form-group">
+       
+    </div>
+
+<div class="modal-footer">
+		<button type="submit" class="btn btn-primary" ng-click="update()">Update</button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+      </div>
+
+</form>
+      </div>
+    </script>
+
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Otsuka User details</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<style type="text/css">
+body {
+	/* background: rgb(185, 210, 224) !important; */
+	background :rgb(240, 248, 255)!important;
+	
+}
+	/* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
+modal-footer {
+	text-align: center !important;
+}
+
+
+.labelotsuka{
+
+font-weight: normal !important;
+
+}
+
+
+</style>
+</head>
+<body>
+
+	<!-- <div class="jumbotron"> -->
+		<div style = "position:absolute;top:10px;right:0;margin-right: 25px;">
+		<a href="#/login" class="btn btn-default btn-md"> <span
+			class="glyphicon glyphicon-log-out"></span> Log out
+		</a>
+		</div>
+		<div class = "panel-img" style="position:absolute;padding-left:0;top:5px">
+			<a class="header__home-link" href="https://www.otsuka-us.com/home">
+				<img class="header__logo" src="images/Logo.gif" alt="Otsuka">
+			</a>
+		</div>
+		<div style="position:relative;margin:0 auto;clear:left;height:auto;top:0;z-index:0;text-align:center">
+		<h2 align="center" style="color: #428bca">Learning AI Admin
+			Console</h2>
+			</div>
+	<!-- </div> -->
+
+	<div ng-show="!status" class="alert alert-danger fade in"
+		style="text-align: center !important;">
+		<a class="close" data-dismiss="alert">&times;</a> <strong>No
+			Userdata Found!</strong>
+	</div>
+
+	<div class="col-xs-3"
+		style="margin-bottom: 12px; margin-left: 100px; margin-top: 21px;"
+		ng-show="status">
+		<input class="form-control ng-pristine ng-valid"
+			ng-model="searchKeyword" type="text" placeholder="Search">
+	</div>
+	<div ng-controller="listController" ng-show="status" style="margin-top: 20px; margin-right: 25px;right:0;position:absolute;">
+		<button 
+			class="btn btn-md btn-primary" ng-click="export()">Export to
+			PDF</button>
+	</div>
+
+	<div class="container" ng-show="status" style = "width:99%">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="table-responsive">
+					<form id="empform">
+						<table id="mytable" class="table no-border">
+
+							<thead >
+								<th style="width: 6%;"></th>
+								<th style="width: 15%;">User Name</th>
+								<th style="width: 10%;">Roles</th>
+								<th style="width: 10%;">Privileges</th>
+								<th style="width: 11%;">Completed Trainings</th>
+								<th style="width: 11%;">Waived Trainings</th>
+								<th style="width: 11%;">Pending Trainings</th>
+								<th style="width: 11%;">Technical Skills</th>
+								<th style="width: 10%;">Years Of Experience</th>
+								<th style="width: 5%;">Action</th>
+							</thead>
+							<tbody ng-repeat="user in users  | filter: searchKeyword">
+								<tr>
+
+									<td style ="width:6%"><a title="click icon to see more" class="btn btn-link"
+										ng-init="toggle[$index] = false"
+										ng-click="toggle[$index] = !toggle[$index]"> <span
+											class="glyphicon glyphicon-plus-sign" ng-if="!toggle[$index]"></span>
+											<span class="glyphicon glyphicon-minus-sign"
+											ng-if="toggle[$index]"></span>
+									</a></td>
+									
+									
+
+									
+										
+										<!-- <td><input name="firstName{{$index}}" 
+										ng-model="user.username" class="form-control" readonly="" /></td>
+										 -->
+										 
+										<!--   <td>
+										 <label name="firstName{{$index}}"  ng-model="user.username" ></label>
+                                       </td>-->
+                                       
+                                       <td>
+                                       <p>
+										<label id= "labelusername" class="labelotsuka"  ng-model="user.username">{{user.username}}</label>
+										</p>
+									</td>
+							
+								<!-- 	<td><input name="designation{{$index}}"
+										ng-model="user.previleges[0]" class="form-control" readonly="" /></td> -->
+										
+										<td>
+										<p>
+										<label id= "labelprevilege" class="labelotsuka"  ng-model="user.previleges[0]">{{user.previleges[0]}}.....</label>
+										</p>
+									</td>
+										
+										
+										
+
+									<td>&nbsp;</td>
+										
+									<td>&nbsp;
+									</td>
+									
+									<td>&nbsp;
+									</td>
+									
+									<td>&nbsp;</td>
+
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+										
+									<td>
+										<div class="buttons">
+											<button class="btn btn-md btn-success"
+												id="editdetails_{{$index}}"
+												ng-click="editEmployee($index, user)">Edit</button>
+										</div>
+									</td>
+								</tr>
+								<tr ng-if="toggle[$index]">
+									<td></td>
+									
+									<td class="padme">
+									
+									
+									</td>
+
+									<td>
+										<!-- <p
+											ng-repeat="previlege in user.previleges track by $index">
+											{{previlege}}</p> -->
+									</td>
+
+									<td>
+										<p
+											ng-repeat="action in user.actions track by $index">
+											{{action}}</p>
+									</td>
+
+									</td>
+									<td>
+										<p
+											ng-repeat="completedtraining in user.completedtrainings track by $index">
+											{{completedtraining}}</p> </span>
+
+									</td>
+									<td>
+										<p
+											ng-repeat="waivedtraining in user.waivedtrainings  track by $index">
+											{{waivedtraining}}</p> </span>
+
+									</td>
+									<td>
+										<p
+											ng-repeat="pendingtraining in user.pendingtrainings2  track by $index">
+											<a style="color: red; cursor: pointer;"
+												ng-href={{pendingtraining.url}}
+												target="_blank"> {{pendingtraining.name}}</a>
+										</p>
+									</td>
+									<td>
+										<p
+											ng-repeat="jd in user.jd track by $index">
+											{{jd}}</p>
+									</td>
+									<td class>
+										<p
+											ng-repeat="yoe in user.years track by $index">
 											{{yoe}}</p>
 									</td>
 									<td></td>
