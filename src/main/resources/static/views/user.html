@@ -7,15 +7,17 @@
      <style type="text/css">
    body { 
    background :rgb(240, 248, 255)!important;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif !important;
    } 
    /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
 </style>
+     
      
 </head>
 
 <body>
 <div style = "position:absolute;top:10px;right:0;margin-right: 25px;">
-		<a href="#/login" class="btn btn-default btn-md"> <span
+		<a href="#/login" class="btn btn-default btn-md" style="background-color: #4c7faf; border-color: #4c7faf; color:white;"> <span
 			class="glyphicon glyphicon-log-out"></span> Log out
 		</a>
 		</div>
@@ -28,6 +30,10 @@
 		<h2 align="center" style="color: #428bca">Learning AI User
 			Console</h2>
 			</div>
+			<br>
+			
+			
+			
  <div ng-show="!status" class="alert alert-danger fade in" style="text-align: center !important;">
         <a class="close" data-dismiss="alert">&times;</a>
         <strong>No Userdata Found!</strong> 
@@ -37,9 +43,10 @@
         <div class="col-lg-8 order-lg-2">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a href="" style="background-color: gainsboro; border-color: black; color:black;" data-target="#profile" data-toggle="tab" class="nav-link active">User Profile</a>
+                    <a href="" style="background-color: #4c7faf; border-color: #4c7faf; color:white;" data-target="#profile" data-toggle="tab" class="nav-link active">User Profile</a>
                 </li>              
             </ul>
+            <br>
             <div class="tab-content py-4">
                 <div class="tab-pane active" id="profile">
                   
@@ -91,9 +98,9 @@
                             <div class="col-lg-9">
                             		<span
 											ng-repeat="pendingtraining in pendingtrainings2 | limitTo: (1 - pendingtrainings2.length) track by $index">
-											<a style="color: red; cursor: pointer;"
+											<a style="color: #3d84c6; cursor: pointer; text-decoration:underline; "
 												ng-href={{pendingtraining.url}}
-												target="_blank">{{pendingtraining.name}}</a> {{$last ? '' : ', '}}
+												target="_blank">{{pendingtraining.name}}</a> {{$last ? '' : ''}}<br>
 										</span>
                             
                             
@@ -116,12 +123,12 @@
 							          <input ng-repeat="y in years track by $index" type="text" ng-model="y" class="form-control" name="years[]" ng-blur ="validate(y)"/></span>    
 							    </div>
 						</div>
-                        
+                        	
                          <br>
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label form-control-label"></label>
                             <div class="col-lg-9">
-                            <button type="submit" class="btn btn-lg btn-success" ng-click="editUser()">Update</button>
+                            <button type="submit" class="btn btn-md btn-success " style="background-color:#4c7faf; border-color: #4c7faf;" ng-click="editUser()">Update</button>
                             </div>
                         </div>
                     </form>
@@ -135,10 +142,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 order-lg-1 text-center">
+       <!--  <div class="col-lg-4 order-lg-1 text-center">
             <img src="//placehold.it/150" class="mx-auto img-fluid img-circle d-block" alt="avatar">
             <h6 class="mt-2">User Profile</h6>
-        </div>
+        </div> -->
     </div>
 </div>
 </body>

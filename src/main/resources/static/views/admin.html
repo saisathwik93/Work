@@ -298,7 +298,7 @@ font-weight: normal !important;
 
 	<!-- <div class="jumbotron"> -->
 		<div style = "position:absolute;top:10px;right:0;margin-right: 25px;">
-		<a href="#/login" class="btn btn-default btn-md"> <span
+		<a href="#/login" class="btn btn-default btn-md" style="background-color: #4c7faf; border-color: #4c7faf; color:white;"> <span
 			class="glyphicon glyphicon-log-out"></span> Log out
 		</a>
 		</div>
@@ -330,16 +330,51 @@ font-weight: normal !important;
 			class="btn btn-md btn-primary" ng-click="export()">Export to
 			PDF</button>
 	</div>
+	
+	
+	<style>
+#mytable{
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+
+#mytable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#mytable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-top-style: transparent;
+    border-bottom-style:transparent;
+}
+
+/* #mytable tr:nth-child(even){background-color: #f2f2f2;}
+
+#mytable tr:hover {background-color: #ddd;}
+ */
+#mytable th {
+
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4c7faf;
+    color: white;
+}
+</style>
 
 	<div class="container" ng-show="status" style = "width:99%">
 		<div class="row">
 			<div class="col-md-12">
 				<div class="table-responsive">
 					<form id="empform">
-						<table id="mytable" class="table no-border">
+						<table id="mytable" class="table table-hover">
 
-							<thead >
-								<th style="width: 6%;"></th>
+							<thead style="color:Blue;">
+								 <th style="width: 6%;"></th> 
 								<th style="width: 15%;">User Name</th>
 								<th style="width: 10%;">Roles</th>
 								<th style="width: 10%;">Privileges</th>
@@ -361,6 +396,7 @@ font-weight: normal !important;
 											ng-if="toggle[$index]"></span>
 									</a></td>
 									
+									<br>
 									
 
 									
@@ -406,19 +442,19 @@ font-weight: normal !important;
 										
 									<td>
 										<div class="buttons">
-											<button class="btn btn-md btn-success"
+											<button class="btn btn-md btn-success " style="background-color:#4c7faf; border-color: #4c7faf;" 
 												id="editdetails_{{$index}}"
 												ng-click="editEmployee($index, user)">Edit</button>
 										</div>
 									</td>
 								</tr>
-								<tr ng-if="toggle[$index]">
+								<tr ng-if="toggle[$index] " style="border-top-style:hidden;">
 									<td></td>
 									
-									<td class="padme">
-									
-									
+									 <td class="padme">
 									</td>
+									
+									
 
 									<td>
 										<!-- <p
@@ -448,7 +484,7 @@ font-weight: normal !important;
 									<td>
 										<p
 											ng-repeat="pendingtraining in user.pendingtrainings2  track by $index">
-											<a style="color: red; cursor: pointer;"
+											<a style="color: #4c7faf; cursor: pointer; text-decoration: underline;"
 												ng-href={{pendingtraining.url}}
 												target="_blank"> {{pendingtraining.name}}</a>
 										</p>
@@ -487,7 +523,7 @@ font-weight: normal !important;
     <div class="form-group">
         <label class="col-xs-3 control-label">User Name</label>
         <div class="col-xs-5">
-			<label for="username" ng-model="username" class="form-control" name = "user_name" />
+			<input type="text" ng-model="username" class="form-control" name = "user_name" disabled="disabled"/>
             
         </div>
     </div>
