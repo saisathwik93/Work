@@ -23,4 +23,9 @@ public interface ExperienceToTrainingsRespository extends JpaRepository<Experien
 	@Transactional
     @Query("delete from ExperienceToTrainings c WHERE c.trainings = :trainings")
     public void deleteExperienceToTraining(@Param("trainings") Trainings trainings);
+	
+	@Modifying
+	@Transactional
+    @Query("Update ExperienceToTrainings c SET c.maxyears = :maxyears WHERE c.experiencetotrainingid=:experiencetotrainingid")
+    public int updateExperience(@Param("maxyears") Long maxyears, @Param("experiencetotrainingid") Long experiencetotrainingid);
 }

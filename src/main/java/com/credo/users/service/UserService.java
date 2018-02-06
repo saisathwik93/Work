@@ -11,8 +11,9 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.credo.users.dto.UpdateMaxYearsDTO;
 import com.credo.users.dto.UpdateYearsList;
-import com.credo.users.dto.UserData;
+
 import com.credo.users.dto.UsersDTO;
 import com.credo.users.dto.UsersPermisionsDTO;
 import com.credo.users.dto.UsersPrevilegesDTO;
@@ -85,85 +86,66 @@ public class UserService {
 		return userRepository.findOne(id);
 	}
 	
+	// Updating max years from excel sheet into database .
+	public boolean updateMaxYears(UpdateMaxYearsDTO updateMaxYears) {		
+		List<Long> experiencetotrainingid=updateMaxYears.getExperiencetotrainingid(); // Get the Experiencetotraining id
+		List<Boolean> flagList=new ArrayList<Boolean>(experiencetotrainingid.size()); // 
+		List<Long> maxyearslist=updateMaxYears.getMaxyears(); // Get the Max years
+		List<Long> expidslist=updateMaxYears.getExpids();  // Get the Experience id's
+		List<Long> trainingidslist=updateMaxYears.getTrainingids(); // Get the training id
+		int i=0;
+		for(Long exptrid:experiencetotrainingid) {
+			ExperienceToTrainings ett=experienceToTrainingsRepository.findOne(exptrid);			
+			Trainings tr=ett.getTraining();
+			Experience exp=ett.getExperience();
+			if(null!=ett && tr.getTrainingid()== trainingidslist.get(i) && exp.getExpid()==expidslist.get(i)) {
+				experienceToTrainingsRepository.updateExperience(maxyearslist.get(i), exptrid); // Updating the max years of experience and storing it into database
+				flagList.add(true);
+			}
+			i++;
+		}
+		if(flagList.contains(false))
+			return false;
+		else 
+			return true;
+	}
+	
+	
+	// Checking whether the user has pending training associated to his privilege as well as the action he is performing
 	public boolean isPendingTrainings(String uname, String action) {
-		Users user=userRepository.getUserByUsername(uname);
+		Users user=userRepository.getUserByUsername(uname); // Fetch the username from repository.
 		List<String> pts=new ArrayList<String>();
 		UsersPrevileges userPrev=user.getUsersPrevileges();
 		Previleges prev=userPrev.getPrevileges();
 		List<String> ptList=new ArrayList<String>();
-		//List<String> pendingTrainingList=getPendingTrainings(userPrev,user);
 		Set<PrevilegesToTrainings> pttList=prev.getPrevilegestotrainings();
 		for(PrevilegesToTrainings ptl:pttList) {
-			pts.add(ptl.getTrainings().getTrainingname());
+			pts.add(ptl.getTrainings().getTrainingname());  // Fetching the privilegestotrainings of the user
 		}
-		//Set<PrevilegesToActions> prevToActions=prev.getPrevilegestoactions();		
-		Actions act=actionsRepository.getActionByName(action);
-		ActionsToTrainings att=act.getActionstotrainings();
+		
+		Actions act=actionsRepository.getActionByName(action); // Get the actions of the user
+		ActionsToTrainings att=act.getActionstotrainings(); // Get the actionstotrainings associated
 		pts.add(att.getTrainings().getTrainingname());
 		for(String pendingTr:pts) {				
 			Trainings pendingT=trainingsRepository.getTrainingByName(pendingTr);
 			ExperienceToTrainings et=experienceToTrainingsRepository.getExperienceByTrainingName(pendingT);
 			Experience e=et.getExperience();
 			UserExperience ue=userExperienceRepository.getExperienceByExpId(e,user);
-			if(et.getMaxyears()>ue.getYears()) {
-				ptList.add(pendingTr);
+			if(et.getMaxyears()>ue.getYears()) {      
+				ptList.add(pendingTr);            // If the max years is greater than user's years of experience add to the list
 			}
 		}
 		if(ptList.size()>0) {
-			return false;
+			return false; // returns false if there is a training in the list
 		}		
-		else return true;
+		else return true; // returns true if the list is empty.
 	}
 	
 	
-	
-	/*public boolean updateUser(long id, UsersPrevilegesDTO userPrevileges) {
-		Users loggeduser = findUserById(id);		
-		boolean retFlag=false;
-		//Experience exp;
-		if (null != loggeduser) {
-			Users user = findUserById(userPrevileges.getUserid());
-			if (loggeduser.isFullaccess()) {
-				if(null!=userPrevileges.getPrevileges() && !userPrevileges.getPrevileges().isEmpty()) {
-					updatePrevileges(user,userPrevileges);
-				}
-				if(null!=userPrevileges.getActions() && !userPrevileges.getActions().isEmpty()) {
-					updateActions(user,userPrevileges);
-				}
-				if(null!=userPrevileges.getCompletedtrainings() && !userPrevileges.getCompletedtrainings().isEmpty()) {
-					updateCompletedTrainings(user,userPrevileges);
-				}
-				if(null!=userPrevileges.getPendingtrainings() && !userPrevileges.getPendingtrainings().isEmpty()) {
-					updatePendingTrainigns(user,userPrevileges);
-				}
-				if(null!=userPrevileges.getJd() && !userPrevileges.getJd().isEmpty() && null!=userPrevileges.getYears() && !userPrevileges.getYears().isEmpty()) {
-					updateYears(user,userPrevileges);
-				}
-				retFlag=true;
-			}else {			
-				updateYears(user,userPrevileges);
-				retFlag=true;
-			}
-		}
-		return retFlag;
-	}*/
 	public boolean updateUser(UsersPrevilegesDTO userPrevileges) {
 		boolean retFlag = false;
-		//Users users = findUserById(userPrevileges.getUserid());
 		Users user=userRepository.findOne(userPrevileges.getUserid());
-		if (user.isFullaccess()) {			
-			if (null != userPrevileges.getPrevileges() && !userPrevileges.getPrevileges().isEmpty()) {
-				updatePrevileges(user, userPrevileges);
-			}
-			if (null != userPrevileges.getActions() && !userPrevileges.getActions().isEmpty()) {
-				updateActions(user, userPrevileges);
-			}
-			if (null != userPrevileges.getCompletedtrainings() && !userPrevileges.getCompletedtrainings().isEmpty()) {
-				updateCompletedTrainings(user, userPrevileges);
-			}
-//			if (null != userPrevileges.getPendingtrainings() && !userPrevileges.getPendingtrainings().isEmpty()) {
-//				updatePendingTrainigns(user, userPrevileges);
-//			}
+		if (user.isFullaccess()) {					// updating the user's years of experience by Admin
 			if (null != userPrevileges.getJd() && !userPrevileges.getJd().isEmpty() && null != userPrevileges.getYears()
 					&& !userPrevileges.getYears().isEmpty()) {
 				updateYears(user, userPrevileges);
@@ -177,264 +159,70 @@ public class UserService {
 	}
 
 
-	private void updatePrevileges(Users user,UsersPrevilegesDTO userPrevileges){
-		Previleges prev=previlegesRepository.getUserPrevByName(userPrevileges.getPrevileges());
-		UsersPrevileges userPrev=user.getUsersPrevileges();
-		userPrev.setPrevileges(prev);
-		//usersPrevilegesRepository.save(userPrev);
-		user.setUsersPrevileges(userPrev);
-		userRepository.save(user);
-	}
-	private void updateActions(Users user,UsersPrevilegesDTO userPrevileges){
-		UsersPrevileges up=user.getUsersPrevileges();
-		Previleges p=up.getPrevileges();
-		String actionNames[]=userPrevileges.getActions().split(",");
-		Set<PrevilegesToActions> ptaset=new HashSet<PrevilegesToActions>();
-		for(String actionName:actionNames) {
-			Actions action=actionsRepository.getActionByName(actionName);
-			PrevilegesToActions pta=new PrevilegesToActions();
-			pta.setPrevileges(p);
-			pta.setActions(action);
-			ptaset.add(pta);
-		}		
-		Set<PrevilegesToActions> prevActns=p.getPrevilegestoactions();
-		for(PrevilegesToActions e:prevActns) {
-			previlegesToActionsRepository.deleteActions(e.getPrevilegestoactionid());
-		}
-		p.setPrevilegestoactions(ptaset);
-		up.setPrevileges(p);
-		user.setUsersPrevileges(up);
-		//previlegesToActionsRepository.save(ptaset);
-		userRepository.save(user);
-		
-	}
-	private void updateCompletedTrainings(Users user,UsersPrevilegesDTO userPrevileges){		
-		List<String> compltedTrainingsList=userPrevileges.getCompletedtrainings();
-		Set<UserCompletedTrainings> ptaset=new HashSet<UserCompletedTrainings>();
-		for(String completedTraining:compltedTrainingsList) {
-			Trainings trng=trainingsRepository.getTrainingByName(completedTraining);
-			UserCompletedTrainings uct=new UserCompletedTrainings();
-			uct.setUsers(user);
-			uct.setTrainings(trng);
-			ptaset.add(uct);
-		}		
-		Set<UserCompletedTrainings> userComplTrngs=user.getUsercompletedtrainings();
-		for(UserCompletedTrainings userComp:userComplTrngs) {
-			userCompletedTrainingsRepository.deleteCompletedTraining(userComp.getUsercompletedtrainingid());
-		}
-		user.setUsercompletedtrainings(ptaset);		
-		userRepository.save(user);
-	}
-//	private void updatePendingTrainigns(Users user,UsersPrevilegesDTO userPrevileges){
-//		UsersPrevileges userPrev=user.getUsersPrevileges();
-//		Previleges prev=userPrev.getPrevileges();
-//		
-//		Set<PrevilegesToTrainings> prevTrainingList=new HashSet<PrevilegesToTrainings>();		
-//		List<String> pendingTraingsList=userPrevileges.getPendingtrainings();		
-//		for(String trainingName:pendingTraingsList) {
-//			Trainings training=trainingsRepository.getTrainingByName(trainingName);
-//			PrevilegesToTrainings prevTraining=new PrevilegesToTrainings();
-//			prevTraining.setTrainings(training);
-//			prevTraining.setPrevileges(prev);
-//			prevTrainingList.add(prevTraining);
-//		}
-//		Set<PrevilegesToTrainings> prevToTrngs=prev.getPrevilegestotrainings();
-//		for(PrevilegesToTrainings prevTrng:prevToTrngs) {
-//			previlegesToTrainingsRepository.deletePrevelegesToTraining(prevTrng.getPrevilegestotrainingid());
-//		}
-//		prev.setPrevilegestotrainings(prevTrainingList);
-//		userPrev.setPrevileges(prev);
-//		user.setUsersPrevileges(userPrev);
-//		userRepository.save(user);
-//	}
+	
 	
 	private void updateYears(Users user, UsersPrevilegesDTO userPrevileges) {
 		List<UpdateYearsList> updateYearsList=new ArrayList<UpdateYearsList>();
-		List<Long> yearsList=userPrevileges.getYears();		
-			
+		List<Long> yearsList=userPrevileges.getYears();				
 		int i=0;
-		Set<UserExperience> userExpList=user.getUserExperience();		
-						
+		Set<UserExperience> userExpList=user.getUserExperience();		// Get the userExpList					
 		for(UserExperience ue:userExpList) {			
-			Experience e=ue.getExperience();
+			Experience e=ue.getExperience();   // Get the experience of the user
 			List<String> jdLists=userPrevileges.getJd();
 			for(String jd:jdLists) {
-				if(e.getExpname().equalsIgnoreCase(jd)) {
+				if(e.getExpname().equalsIgnoreCase(jd)) {        // if the experience is equal to the JD then update the years of experience.
 					UpdateYearsList uyl=new UpdateYearsList();					
 					uyl.setUserExpId(ue.getUserexpid());
 					uyl.setYears(yearsList.get(jdLists.indexOf(jd)));
-					updateYearsList.add(uyl);
+					updateYearsList.add(uyl); // update the years
 				}
-			}			
-			/*if(i>=jdList.size()) { break;}			
-			Experience e1=experienceRepository.getUserExpByName(jdList.get(i));
-			if(e.getExpname().equalsIgnoreCase(e1.getExpname())){			
-				Set<ExperienceToTrainings> experienceToTrainings=e.getExperiencetotrainings();			
-				for(ExperienceToTrainings et:experienceToTrainings) {
-					if(et.getMaxyears()<=yearsList.get(i)) {
-						//removeList.add(et.getTraining());
-						Trainings t=et.getTraining();
-						removeList.add(t);
-					}
-				}				
-			}
-			i++;*/			
+			}	
 		}
 		for(UpdateYearsList uy:updateYearsList) {
-			userExperienceRepository.updateExperience(uy.getYears(),uy.getUserExpId());
+			userExperienceRepository.updateExperience(uy.getYears(),uy.getUserExpId()); // Updating the userexperience in the expereince repository based on the user id.
 		}
-//		Set<UserCompletedTrainings> uctl=new HashSet<UserCompletedTrainings>();
-//		List<String> pendingTrainsList=getPendingTrainings(user.getUsersPrevileges(),user);
-//		for(String pendingTr:pendingTrainsList) {				
-//			Trainings pendingT=trainingsRepository.getTrainingByName(pendingTr);
-//			ExperienceToTrainings et=experienceToTrainingsRepository.getExperienceByTrainingName(pendingT);
-//			for(Long year:yearsList) {
-//				if(et.getMaxyears()<=year) {
-//					UserCompletedTrainings uct=new UserCompletedTrainings();
-//					uct.setTrainings(pendingT);
-//					uct.setUsers(user);
-//					uctl.add(uct);
-//				}			
-//			
-//			}
-//		}
-//		user.getUsercompletedtrainings().addAll(uctl);
-		/*Set<UserCompletedTrainings> uctl=user.getUsercompletedtrainings();
-		for(Trainings ett:removeList) {
-			previlegesToTrainingsRepository.deletePrevilegesToTrainingByTraining(ett);
-			UserCompletedTrainings uct=new UserCompletedTrainings();
-			uct.setTrainings(ett);
-			uct.setUsers(user);
-			uctl.add(uct);
-		}*/
-		
-		
-		/*Set<UserCompletedTrainings> uctl=user.getUsercompletedtrainings();
-		List<String> arr=getPendingTrainings(user.getUsersPrevileges());
-		for(String pt:arr) {
-			Trainings t=trainingsRepository.getTrainingByName(pt);
-			ExperienceToTrainings ett=experienceToTrainingsRepository.getExperienceByTrainingName(t);
-			if(ett.getMaxyears()<=userPrevileges.ge) {
-				UserCompletedTrainings uct=new UserCompletedTrainings();
-				uct.setTrainings(t);
-				uct.setUsers(user);
-				uctl.add(uct);
-			}
-		}*/
-		userRepository.save(user);
+	
+		userRepository.save(user); // Update the details of the user.
 	}
 	
-	public void updatePrevilege(Users user,UsersPrevilegesDTO userPrevileges) {
-		UsersPrevileges userPrev=user.getUsersPrevileges();
-		Previleges previlege=previlegesRepository.getUserPrevByName(userPrevileges.getPrevileges());
-		userPrev.setPrevileges(previlege);
-		user.setUsersPrevileges(userPrev);
-		userRepository.save(user);
-	}
-	
-
-	public boolean saveUser(UsersDTO reqUser) {
-		boolean saveFlag = false;
-		if (null != reqUser) {
-			Users user = new Users();
-			user.setUsername(reqUser.getUsername());
-			user.setPassword(reqUser.getPassword());
-			user.setFullaccess(reqUser.isFullaccess());
-			if (!reqUser.isFullaccess()) {
-				Previleges previlege=previlegesRepository.getUserPrevByName(reqUser.getUserprev());
-				UsersPrevileges up = new UsersPrevileges();				
-				up.setPrevileges(previlege);
-				up.setUsers(user);
-				up.setPrevileges(previlege);
-				user.setUsersPrevileges(up);
-				userRepository.save(user);
-				usersPrevilegesRepository.save(up);
-				saveFlag=true;
-			} else {				
-				user.setUsersPrevileges(null);
-				userRepository.save(user);
-				saveFlag=true;
-			}
-		} else {
-			saveFlag=false;
-		}
-			return saveFlag;
-	}
 	public Users getLoggedInUser(UsersDTO reqUser) {
 		Users user = userRepository.getUser(reqUser.getUsername(), reqUser.getPassword());
 		if(null!=user)
 			return user;
 		else return null;
 	}
+	
+	// Get the details of all the users in the database using Admin access
 	public List<UserPrevilegesResponse> getAdminUser(UsersDTO reqUser) {		
 		Users user = userRepository.getUser(reqUser.getUsername(),reqUser.getPassword());	
-		//user = getLoggedInUser(reqUser);
-		/*if (null != user) {
-			if (user.isFullaccess()) {
-				userPrevilegeResp=new ArrayList<UserPrevilegesResponse>();				
-				userPrevilegesList = usersPrevilegesRepository.findAll();
-				for(UsersPrevileges userPrevilege: userPrevilegesList) {					
-					UserPrevilegesResponse upr=new UserPrevilegesResponse();
-					generateUserPrevResponse(userPrevilege,upr,user);					
-				}
-			} else {
-				userPrevilegeResp = new ArrayList<UserPrevilegesResponse>(1);				
-				UserPrevilegesResponse upr=new UserPrevilegesResponse();
-				UsersPrevileges uprev=user.getUsersPrevileges();
-				generateUserPrevResponse(uprev,upr,user);				
-			}
-		}*/
+		
 		if (null != user) {
-			if (user.isFullaccess()) {
+			if (user.isFullaccess()) {                // Check the access of the user
 				userPrevilegeResp=new ArrayList<UserPrevilegesResponse>();				
-				userPrevilegesList = usersPrevilegesRepository.findAll();
-				//usersPrevilegesRepository.findAll();
+				userPrevilegesList = usersPrevilegesRepository.findAll(); // For Admin access find the details of all the users.
 				for(UsersPrevileges userPrevilege: userPrevilegesList) {					
 					UserPrevilegesResponse upr=new UserPrevilegesResponse();
 					Users users=userPrevilege.getUsers();
-					generateUserPrevResponse(userPrevilege,upr,users);					
+					generateUserPrevResponse(userPrevilege,upr,users,null);			//Generating the userprivilege response.		
 				}
 			}
 		}
 		return userPrevilegeResp;
 	}	
 	
-	public List<UserPrevilegesResponse> getUser(String uname) {		
-		Users user = userRepository.getUserByUsername(uname);
+	// Fetching the details of the user based on the username and action
+	public List<UserPrevilegesResponse> getUser(String uname,String actionName) {
+		Actions action=actionsRepository.getActionByName(actionName);
+		Users user = userRepository.getUserByUsername(uname); // Fetch the username from the repository.
 		userPrevilegeResp = new ArrayList<UserPrevilegesResponse>(1);				
 		UserPrevilegesResponse upr=new UserPrevilegesResponse();
-		UsersPrevileges uprev=user.getUsersPrevileges();
-		generateUserPrevResponse(uprev,upr,user);
+		UsersPrevileges uprev=user.getUsersPrevileges();		 // Fetching the user privileges associated to the user.
+		generateUserPrevResponse(uprev,upr,user,action);         // Generating the userresponse.
 		return userPrevilegeResp;
 	}	
 	
-//	private List<String> getPendingTrainings(UsersPrevileges up, Users user) {		
-//		Set<PrevilegesToTrainings> pttList=up.getPrevileges().getPrevilegestotrainings();
-//		List<String> pts=new ArrayList<String>();
-//		List<String> ptList=new ArrayList<String>();
-//		for(PrevilegesToTrainings ptl:pttList) {
-//			pts.add(ptl.getTrainings().getTrainingname());
-//		}
-//		//get Trainings based on actions to trainings 
-//		Previleges prev=up.getPrevileges(); // possible to simplify api calls
-//		Set<PrevilegesToActions> prevToActions=prev.getPrevilegestoactions();
-//		for(PrevilegesToActions prevAct:prevToActions) {
-//			Actions action=prevAct.getActions();
-//			ActionsToTrainings actionToTraining=action.getActionstotrainings();
-//			pts.add(actionToTraining.getTrainings().getTrainingname());
-//		}
-//		for(String pendingTr:pts) {				
-//			Trainings pendingT=trainingsRepository.getTrainingByName(pendingTr);
-//			ExperienceToTrainings et=experienceToTrainingsRepository.getExperienceByTrainingName(pendingT);
-//			Experience e=et.getExperience();
-//			UserExperience ue=userExperienceRepository.getExperienceByExpId(e,user);
-//			if(et.getMaxyears()>ue.getYears()) {
-//				ptList.add(pendingTr);
-//			}
-//		}
-//		return ptList;
-//	}
-	
+
+
 	private void getPendingAndWaivedTrainings(UsersPrevileges up, Users user, Set<UserCompletedTrainings> completedTraining,
 			UserPrevilegesResponse upr  // modified!
 			) {		
@@ -462,65 +250,73 @@ public class UserService {
 		    return (completedIds.contains(act.getTrainings().getTrainingid()));
 		});
 		
-		 // Temp storage for training names
-		List<String> pts=new ArrayList<String>();     
+		//Temp storage for training names
+		//List<String> pts=new ArrayList<String>();
+		List<Trainings> trainingList=new ArrayList<Trainings>();
 		for(PrevilegesToTrainings ptl:pttList) {
-			pts.add(ptl.getTrainings().getTrainingname());
+			trainingList.add(ptl.getTrainings());
 		}
 		for(ActionsToTrainings actl:actList) {
-			pts.add(actl.getTrainings().getTrainingname());
+			trainingList.add(actl.getTrainings());
 		}
+		List<Trainings> traingRespList=new ArrayList<Trainings>();
+		List<TrainingsResponse> ptList2 = new ArrayList<>();
 		
 		// Adding into the training response object the url
 		List<TrainingsResponse> tresponses = new ArrayList<>();
 		for(PrevilegesToTrainings ptl:pttList) {
 			TrainingsResponse tr = new TrainingsResponse();
-			tr.setName(ptl.getTrainings().getTrainingname());
-			tr.setUrl(ptl.getTrainings().getUrl());
-			tresponses.add(tr);
+			Trainings trn=ptl.getTrainings();    // Get the trainings
+			ExperienceToTrainings et=experienceToTrainingsRepository.getExperienceByTrainingName(trn);
+			Experience e=et.getExperience();
+			UserExperience ue=userExperienceRepository.getExperienceByExpId(e,user); //get the userexperience by experience id.
+			traingRespList.add(trn);
+			tr.setName(trn.getTrainingname());
+			tr.setUrl(trn.getUrl());
+			//tresponses.add(tr);
+			if(et.getMaxyears()>ue.getYears()) {    // if the max years are greater than the user's training add to the list
+				ptList2.add(tr);
+			} 
 		}
+		
+		// Checking the ActionstoTrainings List
 		for(ActionsToTrainings actl:actList) {
 			TrainingsResponse tr = new TrainingsResponse();
-			tr.setName(actl.getTrainings().getTrainingname());
-			tr.setUrl(actl.getTrainings().getUrl());
-			tresponses.add(tr);
+			Trainings trn=actl.getTrainings();
+			traingRespList.add(trn);         //Add the trainings
+			tr.setName(trn.getTrainingname()); // Get the training name
+			tr.setUrl(trn.getUrl());            // Get the Url associated with the training
+			tresponses.add(tr);			
+			ExperienceToTrainings et=experienceToTrainingsRepository.getExperienceByTrainingName(trn);
+			Experience e=et.getExperience();
+			UserExperience ue=userExperienceRepository.getExperienceByExpId(e,user);
+			tr.setName(trn.getTrainingname());      //Set the training name
+			tr.setUrl(trn.getUrl());                 //Set the Url
+			
+			if(et.getMaxyears()>ue.getYears()) {
+				ptList2.add(tr);
+			} 
 		}
 
-		// Based on user experience, adds to pending training list or waived trainings list
-		List<String> ptList=new ArrayList<String>();   // Pending Trainngs return storage
-		List<String> wtList=new ArrayList<String>();   // Waived trainings return storage
-		for(String pendingTr:pts) {				
-			Trainings pendingT=trainingsRepository.getTrainingByName(pendingTr);  // TODO: this needs to be by ID. If two trainngs have the same name, will be by a bug
-			ExperienceToTrainings et=experienceToTrainingsRepository.getExperienceByTrainingName(pendingT);
+		// Based on user experience, adds to pending training list or waived training list
+		List<String> ptList=new ArrayList<String>();   // Pending Training return storage
+		List<String> wtList=new ArrayList<String>();   // Waived training return storage
+		for(Trainings trang:trainingList) {				
+			//Trainings pendingT=trainingsRepository.findOne(trang);  // TODO: this needs to be by ID. If two trainngs have the same name, will be by a bug
+			ExperienceToTrainings et=experienceToTrainingsRepository.getExperienceByTrainingName(trang);
 			Experience e=et.getExperience();
 			UserExperience ue=userExperienceRepository.getExperienceByExpId(e,user);
 			if(et.getMaxyears()>ue.getYears()) {
-				ptList.add(pendingTr);
+				ptList.add(trang.getTrainingname());
 			} else {
-				wtList.add(pendingTr);
+				wtList.add(trang.getTrainingname());
 			}
 		}
 		
-
-		List<TrainingsResponse> ptList2 = new ArrayList<>();
-		for(TrainingsResponse pendingTrainingsResponse:tresponses) {	
-			String pendingTr = pendingTrainingsResponse.getName();
-			Trainings pendingT=trainingsRepository.getTrainingByName(pendingTr);  // TODO: this needs to be by ID. If two trainngs have the same name, will be by a bug
-			ExperienceToTrainings et=experienceToTrainingsRepository.getExperienceByTrainingName(pendingT);
-			Experience e=et.getExperience();
-			UserExperience ue=userExperienceRepository.getExperienceByExpId(e,user);
-			if(et.getMaxyears()>ue.getYears()) {
-				ptList2.add(pendingTrainingsResponse);
-			} else {
-//				wtList.add(pendingTr);
-			}
-		}
-
-		
-		// Sort
-		Collections.sort(ptList);
+		// Sort the list of waived training
 		Collections.sort(wtList);
 		
+		// Sort the pending training list
 		Collections.sort(ptList2, new Comparator<TrainingsResponse>() {
 			@Override
 			public int compare (TrainingsResponse o1, TrainingsResponse o2) {
@@ -536,8 +332,7 @@ public class UserService {
 		}
 		 ptarray= new String[ptList.size()];
 		 ptList.toArray(ptarray);
-		upr.setPendingtrainings(ptarray);
-
+		
 		
 		String[] wtarray;
 		if(wtList.size()<=0) {
@@ -549,25 +344,37 @@ public class UserService {
 
 	}
 	
-	private void generateUserPrevResponse(UsersPrevileges userPrevilege, UserPrevilegesResponse upr,Users user) {
+	private void generateUserPrevResponse(UsersPrevileges userPrevilege, UserPrevilegesResponse upr,Users user,Actions action) {
 
-		// something
+		//Fetch the user's based on the privilege
 		Users users=userPrevilege.getUsers();
-		upr.setUserid(users.getUserid());//1
-		upr.setUsername(users.getUsername());//2
+		upr.setUserid(users.getUserid());//1           //1.set the user id
+		upr.setUsername(users.getUsername());      // 2.Set the username
 		
-		UsersPrevileges up=users.getUsersPrevileges();  // same as userPrivileges?
-		upr.setPrevileges(up.getPrevileges().getPrevname());//4
-		Long userPrevId=up.getPrevileges().getPrevid(); // redundant call
-		
+		UsersPrevileges up=users.getUsersPrevileges();  // 
+		upr.setPrevileges(up.getPrevileges().getPrevname()); //3.Set the privileges
+		Long userPrevId=up.getPrevileges().getPrevid(); //Get the user privilege id.
+		List<String> bts=new ArrayList<String>();
 		PrevilegesToActions previlegeToAction=previlegesToActionsRepository.findOne(userPrevId);
 		Set<PrevilegesToActions> prevToActionsList=previlegeToAction.getPrevileges().getPrevilegestoactions();
+		for(PrevilegesToActions pta:prevToActionsList) {
+			Actions act=pta.getActions();
+			if(act.getActionname().equals(action.getActionname()))    // Get the action name
+			bts.add(act.getActionstotrainings().getTrainings().getTrainingname()); // Get the training based on the action name.
+		}
+		
+		// Set the blocked training
+		Collections.sort(bts);
+		String[] btarray = new String[bts.size()];
+		bts.toArray(btarray );
+		upr.setBlockedtrainings(btarray);
+		
 		String actionNames=null;
 		for(PrevilegesToActions prevAction:prevToActionsList) {
 			if(null==actionNames) actionNames=prevAction.getActions().getActionname();
 			else actionNames=actionNames+","+prevAction.getActions().getActionname();    
 		}
-		upr.setActions(actionNames);//5
+		upr.setActions(actionNames);//4.Set the Action names.
 		
 		//get completed Trainings
 		Set<UserCompletedTrainings> userCompletedTrainingsList=user.getUsercompletedtrainings();
@@ -578,23 +385,8 @@ public class UserService {
 		Collections.sort(cts);
 		String[] ctarray = new String[cts.size()];
 		cts.toArray(ctarray );
-		upr.setCompletedtrainings(ctarray);
+		upr.setCompletedtrainings(ctarray);   // 5.Set the completed training
 		
-		/*
-		//get Pending Trainings
-		Set<PrevilegesToTrainings> pttList=up.getPrevileges().getPrevilegestotrainings();
-		List<String> pts=new ArrayList<String>();
-		for(PrevilegesToTrainings ptl:pttList) {
-			pts.add(ptl.getTrainings().getTrainingname());
-		}
-		//get Trainings based on actions to trainings 
-		Previleges prev=up.getPrevileges();
-		Set<PrevilegesToActions> prevToActions=prev.getPrevilegestoactions();
-		for(PrevilegesToActions prevAct:prevToActions) {
-			Actions action=prevAct.getActions();
-			ActionsToTrainings actionToTraining=action.getActionstotrainings();
-			pts.add(actionToTraining.getTrainings().getTrainingname());
-		}*/		
 		
 		//get Experience
 		List<String> jdList=new ArrayList<String>();
@@ -602,36 +394,19 @@ public class UserService {
 		Set<UserExperience> userExpList=users.getUserExperience();		
 		for(UserExperience uex:userExpList) {
 			jdList.add(uex.getExperience().getExpname());
-			yearsList.add(uex.getYears());
-			//getPending Trainings			
+			yearsList.add(uex.getYears());  
+				
 		}
-		//List<String> ptList=new ArrayList<String>();
-//		List<String> ptList=getPendingTrainings(up,user);
+		//6.getPending Training with Url		
 	    getPendingAndWaivedTrainings(up,user,userCompletedTrainingsList, upr);
-		/*for(String pendingTr:pendingTrainsList) {				
-			Trainings pendingT=trainingsRepository.getTrainingByName(pendingTr);
-			ExperienceToTrainings et=experienceToTrainingsRepository.getExperienceByTrainingName(pendingT);
-			Experience e=et.getExperience();
-			UserExperience ue=userExperienceRepository.getExperienceByExpId(e,user);
-			if(et.getMaxyears()>ue.getYears()) {
-				ptList.add(pendingTr);
-			}
-		}*/
-//		String[] ptarray;
-//		if(ptList.size()<=0) {
-//			ptarray=new String[1];
-//		}
-//		 ptarray= new String[ptList.size()];
-//		 ptList.toArray(ptarray);
-//		upr.setPendingtrainings(ptarray);
 		
 		String[] exp = new String[userExpList.size()];
 		jdList.toArray(exp);
-		upr.setJd(exp);
+		upr.setJd(exp);       // 7. Set the jd
 		
 		Long[] yearsExp = new Long[userExpList.size()];
 		yearsList.toArray(yearsExp);
-		upr.setYears(yearsExp);
-		userPrevilegeResp.add(upr);
+		upr.setYears(yearsExp);  //8. Set the years of experience
+		userPrevilegeResp.add(upr);  // Set the user privilege response.
 	}
 }

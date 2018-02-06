@@ -36,7 +36,7 @@ app.controller('adminController', function($scope, dataShare, $location, $http, 
 });
 
 // Admin login page
-app.controller('adminLoginController',function($scope, $http, $location, dataShare) {
+app.controller('adminLoginController',function($scope, $http, $location,config, dataShare) {
 	console.log("Admin Page.");
 	
 	$scope.login = function() {
@@ -46,7 +46,7 @@ app.controller('adminLoginController',function($scope, $http, $location, dataSha
 			username : username,
 			password : password
 		});
-		var url = 'http://localhost:8080/getAdminUser';
+		var url = config.apiLocalUrl+'getAdminUser';
 		$http({
 			url : url, // invoke service
 			method : 'POST',
@@ -66,11 +66,15 @@ app.controller('adminLoginController',function($scope, $http, $location, dataSha
 app.controller('loginController',function($scope, $http, $location, config, dataShare, Notification) {
 	var urlParams = new URLSearchParams(window.location.search);
 	var username = urlParams.get('uname');
+	var actions = urlParams.get('action');
 	var url = config.apiLocalUrl+'getUser' ;
 	$http({
 		url : url, // invoke service
 		method : 'GET',
-		params:{uname: username}		
+		params:{uname: username, 
+				action:actions
+				}	
+	    
 	}).then(function(response) {
 		console.log(response)
 		dataShare.sendData(response);
@@ -180,7 +184,7 @@ app.controller('userController', function($scope, dataShare, $location, $http, N
 		$scope.privileges = user.actions;
 		$scope.jd =user.jd;
 		$scope.years = user.years;
-		$scope.pendingtrainings = user.pendingtrainings;
+		$scope.blockedtrainings = user.blockedtrainings;
 		$scope.pendingtrainings2 = user.pendingtrainings2;
 		$scope.waivedtrainings = user.waivedtrainings;
 		$scope.completedtrainings = user.completedtrainings;
@@ -225,6 +229,7 @@ app.controller('userController', function($scope, dataShare, $location, $http, N
 		}, function(error) {
 			Notification.error({message: 'Error, while updating data, please try again', positionX: 'center'});
 		})
+		
 	}
 
 });

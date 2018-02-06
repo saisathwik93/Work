@@ -38,6 +38,8 @@ app.factory('dataShare',function($rootScope){
 
 app.constant('config', {
     apiLocalUrl: 'http://localhost:8080/',
-    apiHttpUrl: 'http://10.18.30.29:8080/springboot-angularjs-credo/'
+    apiHttpUrl: 'http://10.18.30.29:8081/springboot-angularjs-credo/'
 });
+
+
 

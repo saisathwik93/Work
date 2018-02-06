@@ -9,19 +9,13 @@ public class UserPrevilegesResponse {
 	private Long userid;	
 	private String actions;
 	private String[] completedtrainings;
-	private String[] pendingtrainings;
 	private String[] waivedtrainings;
 	private List<TrainingsResponse> pendingtrainings2;
 	private String[] jd;
 	private Long[] years;
-	//private String[] waivertrainings;
+	private String[] blockedtrainings;
 	
-	/*public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}*/
+	
 	public String getUsername() {
 		return username;
 	}
@@ -65,18 +59,13 @@ public class UserPrevilegesResponse {
 	public void setCompletedtrainings(String[] completedtrainings) {
 		this.completedtrainings = completedtrainings;
 	}
-	public String[] getPendingtrainings() {
-		return pendingtrainings;
+	
+	public String[] getBlockedtrainings() {
+		return blockedtrainings;
 	}
-	public void setPendingtrainings(String[] pendingtrainings) {
-		this.pendingtrainings = pendingtrainings;
+	public void setBlockedtrainings(String[] blockedtrainings) {
+		this.blockedtrainings = blockedtrainings;
 	}
-//	public String[] getWaivertrainings() {
-//		return waivertrainings;
-//	}
-//	public void setWaivertrainings(String[] waivertrainings) {
-//		this.waivertrainings = waivertrainings;
-//	}
 	public String[] getWaivedtrainings() {
 		return waivedtrainings;
 	}
@@ -88,8 +77,5 @@ public class UserPrevilegesResponse {
 	}
 	public void setPendingtrainings2(List<TrainingsResponse> pendingtrainings2) {
 		this.pendingtrainings2 = pendingtrainings2;
-	}
-
-	
-	
+	}		
 }

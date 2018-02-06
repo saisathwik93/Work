@@ -13,3 +13,4 @@ public interface ActionsRepository extends JpaRepository<Actions, Long> {
 	@Query("SELECT r FROM Actions r where r.actionname=:actionname")
 	public Actions getActionByName(@Param("actionname") String actionname);
 }
+
