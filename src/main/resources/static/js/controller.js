@@ -185,7 +185,7 @@ app.controller('userController', function($scope, dataShare, $location, $http, N
 		$scope.jd =user.jd;
 		$scope.years = user.years;
 		$scope.blockedtrainings = user.blockedtrainings;
-		$scope.pendingtrainings2 = user.pendingtrainings2;
+		$scope.pendingtrainings = user.pendingtrainings;
 		$scope.waivedtrainings = user.waivedtrainings;
 		$scope.completedtrainings = user.completedtrainings;
 	} else {

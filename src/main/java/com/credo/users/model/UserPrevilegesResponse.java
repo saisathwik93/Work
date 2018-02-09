@@ -10,10 +10,10 @@ public class UserPrevilegesResponse {
 	private String actions;
 	private String[] completedtrainings;
 	private String[] waivedtrainings;
-	private List<TrainingsResponse> pendingtrainings2;
+	private List<TrainingsResponse> pendingtrainings;
 	private String[] jd;
 	private Long[] years;
-	private String[] blockedtrainings;
+	private List<TrainingsResponse> blockedtrainings;
 	
 	
 	public String getUsername() {
@@ -60,10 +60,10 @@ public class UserPrevilegesResponse {
 		this.completedtrainings = completedtrainings;
 	}
 	
-	public String[] getBlockedtrainings() {
+	public List<TrainingsResponse> getBlockedtrainings() {
 		return blockedtrainings;
 	}
-	public void setBlockedtrainings(String[] blockedtrainings) {
+	public void setBlockedtrainings(List<TrainingsResponse> blockedtrainings) {
 		this.blockedtrainings = blockedtrainings;
 	}
 	public String[] getWaivedtrainings() {
@@ -72,10 +72,10 @@ public class UserPrevilegesResponse {
 	public void setWaivedtrainings(String[] waivedtrainings) {
 		this.waivedtrainings = waivedtrainings;
 	}
-	public List<TrainingsResponse> getPendingtrainings2() {
-		return pendingtrainings2;
+	public List<TrainingsResponse> getPendingtrainings() {
+		return pendingtrainings;
 	}
-	public void setPendingtrainings2(List<TrainingsResponse> pendingtrainings2) {
-		this.pendingtrainings2 = pendingtrainings2;
+	public void setPendingtrainings(List<TrainingsResponse> pendingtrainings) {
+		this.pendingtrainings = pendingtrainings;
 	}		
 }

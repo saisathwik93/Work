@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.credo.users.model.ExperienceToTrainings;
 import com.credo.users.model.Trainings;
-import com.credo.users.model.UsersPrevileges;
+
 
 @Repository
 public interface ExperienceToTrainingsRespository extends JpaRepository<ExperienceToTrainings, Long> {
@@ -17,7 +17,7 @@ public interface ExperienceToTrainingsRespository extends JpaRepository<Experien
 	public UserPrevileges getUserPrevileges(@Param("userid") Long userid);*/
 	
 	@Query("SELECT r FROM ExperienceToTrainings r where r.trainings = :trainings")
-	public ExperienceToTrainings getExperienceByTrainingName(@Param("trainings") Trainings trainings);
+	public ExperienceToTrainings getExperienceByTraining(@Param("trainings") Trainings trainings);
 	
 	@Modifying
 	@Transactional
