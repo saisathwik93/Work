@@ -18,8 +18,8 @@ public interface PrevilegesToActionsRepository extends JpaRepository<PrevilegesT
 	/*@Query("SELECT r.actionid FROM PrevilegesToActions r where r.previd=:previd")
 	public List<Long> getUserPrevileges(@Param("previd") Long previd);*/
 	
-	/*@Modifying
+	@Modifying
 	@Transactional
     @Query("delete from PrevilegesToActions c WHERE c.previlegestoactionid = :previlegestoactionid")
-    public void deleteActions(@Param("previlegestoactionid") Long previlegestoactionid);*/
+    public void deleteActions(@Param("previlegestoactionid") Long previlegestoactionid);
 }

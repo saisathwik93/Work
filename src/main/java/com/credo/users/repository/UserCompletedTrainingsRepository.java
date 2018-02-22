@@ -20,8 +20,8 @@ public interface UserCompletedTrainingsRepository extends JpaRepository<UserComp
 	@Query("SELECT r FROM UserCompletedTrainings r where r.trainings=:trainings")
 	public UserCompletedTrainings getCompletedTrainingByName(@Param("trainings") Trainings trainings);
 	
-	/*@Modifying
+	@Modifying
 	@Transactional
     @Query("delete from UserCompletedTrainings c WHERE c.usercompletedtrainingid = :usercompletedtrainingid")
-    public void deleteCompletedTraining(@Param("usercompletedtrainingid") Long usercompletedtrainingid);*/
+    public void deleteCompletedTraining(@Param("usercompletedtrainingid") Long usercompletedtrainingid);
 }

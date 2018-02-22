@@ -1,42 +1,37 @@
 package com.credo.users.dto;
 
+import java.util.List;
 
 public class UpdateMaxYearsDTO {
-	private Long experiencetotrainingid;
-	private Long expids;
-	private Long trainingids;
-	private Long maxyears;
-	private String trainingName;
-	public Long getExperiencetotrainingid() {
+	List<Long> experiencetotrainingid;
+	List<Long> expids;
+	List<Long> trainingids;
+	List<Long> maxyears;
+	
+	public List<Long> getExperiencetotrainingid() {
 		return experiencetotrainingid;
 	}
-	public void setExperiencetotrainingid(Long experiencetotrainingid) {
+	public void setExperiencetotrainingid(List<Long> experiencetotrainingid) {
 		this.experiencetotrainingid = experiencetotrainingid;
 	}
-	public Long getExpids() {
+	public List<Long> getExpids() {
 		return expids;
 	}
-	public void setExpids(Long expids) {
+	public void setExpids(List<Long> expids) {
 		this.expids = expids;
+		
 	}
-	public Long getTrainingids() {
+	public List<Long> getTrainingids() {
 		return trainingids;
 	}
-	public void setTrainingids(Long trainingids) {
+	public void setTrainingids(List<Long> trainingids) {
 		this.trainingids = trainingids;
 	}
-	public Long getMaxyears() {
+	public List<Long> getMaxyears() {
 		return maxyears;
 	}
-	public void setMaxyears(Long maxyears) {
+	public void setMaxyears(List<Long> maxyears) {
 		this.maxyears = maxyears;
 	}
-	public String getTrainingName() {
-		return trainingName;
-	}
-	public void setTrainingName(String trainingName) {
-		this.trainingName = trainingName;
-	}
-	
-	
+	//update
 }

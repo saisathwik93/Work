@@ -1,8 +1,6 @@
 
 <html>
 <head>
-
-
 <meta charset="UTF-8">
 <title>Otsuka User details</title>
 <meta name="viewport"
@@ -14,18 +12,12 @@ body {
 	
 }
 </style>
-
-
 </head>
-
-
 <body>
-
-
 
 	<!-- <div class="jumbotron"> -->
 		<div style = "position:absolute;top:10px;right:0;margin-right: 25px;">
-		<a href="http://localhost:8080/index.html#/login" class="btn btn-default btn-md" style="background-color: #4c7faf; border-color: #4c7faf; color:white;"> <span
+		<a href="http://localhost:8080/index.html" class="btn btn-default btn-md" style="background-color: #4c7faf; border-color: #4c7faf; color:white;"> <span
 			class="glyphicon glyphicon-log-out"></span> Log out
 		</a>
 		</div>
@@ -57,34 +49,7 @@ body {
 			PDF</button>
 	</div>
 	
-	<!-- <div class="content">
-    <h3>Sample h3 tag</h3>
-    <p>Sample pararaph</p>
-</div>
-<div id="editor"></div>
-<button id="cmd">Generate PDF</button> -->
-
-	<script type="text/javascript">
-
-var doc = new jsPDF();
-var specialElementHandlers = {
-    '#editor': function (element, renderer) {
-        return true;
-    }
-};
-
-$('#cmd').click(function () {   
-    doc.fromHTML($('.container').html(), 15, 15, {
-        'width': 170,
-            'elementHandlers': specialElementHandlers
-    });
-    doc.save('sample-file.pdf');
-});
-</script>
-	
-	
 	<div class="container" ng-show="status" style = "width:99%">
-	<div id =editor"></div>
 		<div class="row">
 			<div class="col-md-12">
 				<div class="table-responsive">
@@ -159,7 +124,7 @@ $('#cmd').click(function () {
 										<div class="buttons">
 											<button class="btn btn-md btn-success " style="background-color:#4c7faf; border-color: #4c7faf;" 
 												id="editdetails_{{$index}}"
-												ng-click="editEmployee($index,user)">Edit</button>
+												ng-click="editEmployee($index, user)">Edit</button>
 										</div>
 									</td>
 								</tr>
@@ -281,10 +246,7 @@ $('#cmd').click(function () {
 
 </form>
       </div>
-
     </script>
-    
-
 
 </body>
 </html>

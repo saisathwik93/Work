@@ -19,10 +19,10 @@ public interface ExperienceToTrainingsRespository extends JpaRepository<Experien
 	@Query("SELECT r FROM ExperienceToTrainings r where r.trainings = :trainings")
 	public ExperienceToTrainings getExperienceByTraining(@Param("trainings") Trainings trainings);
 	
-	/*@Modifying
+	@Modifying
 	@Transactional
     @Query("delete from ExperienceToTrainings c WHERE c.trainings = :trainings")
-    public void deleteExperienceToTraining(@Param("trainings") Trainings trainings);*/
+    public void deleteExperienceToTraining(@Param("trainings") Trainings trainings);
 	
 	@Modifying
 	@Transactional

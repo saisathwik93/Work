@@ -34,15 +34,3 @@ try {
 
 
 
-//Code to add in the completion tab
-
-variables.set("object_id", object.getString("r_object_id"))
-
-
-
-
-
-
-
-
-

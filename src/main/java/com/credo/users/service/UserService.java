@@ -89,17 +89,22 @@ public class UserService {
 	}
 	
 	// Updating max years from excel sheet into database .
-	public boolean updateMaxYears(List<UpdateMaxYearsDTO> updateMaxYearsList) {		
-		List<Boolean> flagList=new ArrayList<Boolean>();		
-		for(UpdateMaxYearsDTO updateMaxYearsDTO:updateMaxYearsList) {
-				Long exptrid=updateMaxYearsDTO.getExperiencetotrainingid();
-				ExperienceToTrainings ett=experienceToTrainingsRepository.findOne(exptrid);			
-				Trainings tr=ett.getTraining();
-				Experience exp=ett.getExperience();
-				if(null!=ett && tr.getTrainingid()== updateMaxYearsDTO.getTrainingids() && exp.getExpid()==updateMaxYearsDTO.getExpids()) {
-					experienceToTrainingsRepository.updateExperience(updateMaxYearsDTO.getMaxyears(), exptrid); // Updating the max years of experience and storing it into database
-					flagList.add(true);
-				}
+	public boolean updateMaxYears(UpdateMaxYearsDTO updateMaxYears) {		
+		List<Long> experiencetotrainingid=updateMaxYears.getExperiencetotrainingid(); // Get the Experiencetotraining id
+		List<Boolean> flagList=new ArrayList<Boolean>(experiencetotrainingid.size()); // 
+		List<Long> maxyearslist=updateMaxYears.getMaxyears(); // Get the Max years
+		List<Long> expidslist=updateMaxYears.getExpids();  // Get the Experience id's
+		List<Long> trainingidslist=updateMaxYears.getTrainingids(); // Get the training id
+		int i=0;
+		for(Long exptrid:experiencetotrainingid) {
+			ExperienceToTrainings ett=experienceToTrainingsRepository.findOne(exptrid);			
+			Trainings tr=ett.getTraining();
+			Experience exp=ett.getExperience();
+			if(null!=ett && tr.getTrainingid()== trainingidslist.get(i) && exp.getExpid()==expidslist.get(i)) {
+				experienceToTrainingsRepository.updateExperience(maxyearslist.get(i), exptrid); // Updating the max years of experience and storing it into database
+				flagList.add(true);
+			}
+			i++;
 		}
 		if(flagList.contains(false))
 			return false;
@@ -355,12 +360,7 @@ public class UserService {
 		wtarray= new String[wtList.size()];
 		 wtList.toArray(wtarray);
 		upr.setWaivedtrainings(wtarray);
-		
-		
-		String[] ptArray;
-		ptArray= new String[ptList.size()];
-		ptList.toArray(ptArray);
-		upr.setPendingtrainings2(ptArray);
+
 	}
 	
 		
