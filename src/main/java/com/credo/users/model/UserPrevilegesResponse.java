@@ -14,6 +14,7 @@ public class UserPrevilegesResponse {
 	private String[] jd;
 	private Long[] years;
 	private List<TrainingsResponse> blockedtrainings;
+	private String[] pendingtrainings2;
 	
 	
 	public String getUsername() {
@@ -77,5 +78,13 @@ public class UserPrevilegesResponse {
 	}
 	public void setPendingtrainings(List<TrainingsResponse> pendingtrainings) {
 		this.pendingtrainings = pendingtrainings;
+	}
+	public String[] getPendingtrainings2() {
+		return pendingtrainings2;
+	}
+	public void setPendingtrainings2(String[] pendingtrainings2) {
+		this.pendingtrainings2 = pendingtrainings2;
 	}		
+	
+	
 }

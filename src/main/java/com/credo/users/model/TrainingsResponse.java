@@ -45,6 +45,7 @@ public class TrainingsResponse {
 			return false;
 		return true;
 	}
+	
 
 	
 	

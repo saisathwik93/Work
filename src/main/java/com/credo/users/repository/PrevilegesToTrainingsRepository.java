@@ -16,7 +16,7 @@ import com.credo.users.model.UsersPrevileges;
 
 @Repository
 public interface PrevilegesToTrainingsRepository extends JpaRepository<PrevilegesToTrainings, Long> {
-	@Modifying
+	/*@Modifying
 	@Transactional
     @Query("delete from PrevilegesToTrainings c WHERE c.previlegestotrainingid = :previlegestotrainingid")
     public void deletePrevelegesToTraining(@Param("previlegestotrainingid") Long previlegestotrainingid);
@@ -24,5 +24,5 @@ public interface PrevilegesToTrainingsRepository extends JpaRepository<Previlege
 	@Modifying
 	@Transactional
     @Query("delete from ExperienceToTrainings c WHERE c.trainings = :trainings")
-    public void deletePrevilegesToTrainingByTraining(@Param("trainings") Trainings trainings);
+    public void deletePrevilegesToTrainingByTraining(@Param("trainings") Trainings trainings);*/
 }

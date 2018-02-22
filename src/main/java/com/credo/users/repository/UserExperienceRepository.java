@@ -20,11 +20,11 @@ public interface UserExperienceRepository extends JpaRepository<UserExperience, 
     @Query("Update UserExperience c SET c.years = :years WHERE c.userexpid = :userexpid")
     public int updateExperience(@Param("years") Long years, @Param("userexpid") Long userexpid);
 	
-	@Modifying
+	/*@Modifying
 	@Transactional
     @Query("delete from UserExperience c WHERE c.userexpid = :userexpid")
     public void deleteExperience(@Param("userexpid") Long userexpid);
-	
+	*/
 	@Query("SELECT r FROM UserExperience r where r.experience = :experience and r.users=:users")
 	public UserExperience getExperienceByExpId(@Param("experience") Experience experience, @Param("users") Users users);
 	
