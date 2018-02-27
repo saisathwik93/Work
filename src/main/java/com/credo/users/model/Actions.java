@@ -59,7 +59,5 @@ public class Actions implements Serializable{
 
 	public void setPrevilegestoactions(Set<PrevilegesToActions> previlegestoactions) {
 		this.previlegestoactions = previlegestoactions;
-	}
-		
-	
+	}	
 }

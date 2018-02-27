@@ -190,9 +190,9 @@ public class UserService {
 	}
 	
 	// Get the details of all the users in the database using Admin access
-	public List<UserPrevilegesResponse> getAdminUser(UsersDTO reqUser) {		
+	public List<UserPrevilegesResponse> getAdminUser(UsersDTO reqUser) {
 		Users user = userRepository.getUser(reqUser.getUsername(),reqUser.getPassword());	
-		
+		if(reqUser.getUsername().equalsIgnoreCase(user.getUsername()) && reqUser.getPassword().equalsIgnoreCase(user.getPassword())){
 		if (null != user) {
 			if (user.isFullaccess()) {                                       // Check the access of the user
 				userPrevilegeResp=new ArrayList<UserPrevilegesResponse>();				
@@ -203,9 +203,13 @@ public class UserService {
 					Actions action = new Actions();
 					generateUserPrevResponse(userPrevilege,upr,users,action);	  //Generating the userprivilege response.		
 				}
+				
 			}
 		}
+		}
 		return userPrevilegeResp;
+		
+		
 	}	
 	
 	// Fetching the details of the user based on the username and action.

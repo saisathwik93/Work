@@ -7,9 +7,9 @@ var action ="CheckOut";
 var uname = u.getString("user_address").toLowerCase();
 
 
- var portalurl ="10.18.30.29:8080/springboot-angularjs-credo/index.html?uname="+uname;
+ var portalurl ="10.18.30.29:8081/springboot-angularjs-credo/index.html?uname="+uname + "&action=" + action;
  
-var is = new java.net.URL("http://10.18.30.29:8080/springboot-angularjs-credo/isPendingTrainings?uname="+ uname + "&action="+ action).openStream();
+var is = new java.net.URL("http://10.18.30.29:8081/springboot-angularjs-credo/isPendingTrainings?uname="+ uname + "&action="+ action).openStream();
 try {
     
         var rd = new java.io.BufferedReader(new java.io.InputStreamReader(is));
@@ -23,7 +23,7 @@ try {
     if(jsonText=="false")
 {
         
-        throw "You having pending training :<a href='http://" + portalurl + "' target='_blank'>Click here to Redirect Leraning AI Apps</a>";
+        throw "You having a pending training :<a href='http://" + portalurl + "' target='_blank'>Click here to Redirect to Leraning AI Apps</a>";
     }
     } finally {
       is.close();

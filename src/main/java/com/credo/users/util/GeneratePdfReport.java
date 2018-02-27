@@ -33,12 +33,14 @@ public class GeneratePdfReport {
         	Font bodyFont = FontFactory.getFont(FontFactory.TIMES_ROMAN);
         	Paragraph preface = new Paragraph();
         	
+        	Paragraph preface1 = new Paragraph();
         	
-        
-        	preface.add(Element.ALIGN_CENTER,new Paragraph("Audit Report",headFont));
+        	preface1.add(new Chunk("Audit Report",titleFont));	
+        	preface1.add(Chunk.TABBING);
+        	preface1.add(Chunk.TABBING);
+            preface1.setTabSettings(new TabSettings(350f));
+            preface1.add(new Paragraph("\n"));
         	
-        	preface.add(new Paragraph("\n"));
-        	preface.add(new Paragraph("\n"));
        
 
             for (UserPrevilegesResponse userPrev : userPrevList) {
@@ -76,7 +78,7 @@ public class GeneratePdfReport {
                 for(String completed:cts) {
                 	if(count==1) {
                 		preface.add(new Chunk(("Completed Trainings   	  "), headFont));
-                		preface.add(new Chunk((completed+ "\n"),bodyFont));
+                		preface.add(new Chunk((completed + "\n"),bodyFont));
                 	}
                 	
                 	else {
@@ -190,7 +192,9 @@ public class GeneratePdfReport {
             }
             PdfWriter.getInstance(document, out);
             document.open();
-            document.add(preface);            
+            document.add(preface1);
+            document.add(preface); 
+           
             document.close();            
         } catch (DocumentException ex) {        
             Logger.getLogger(GeneratePdfReport.class.getName()).log(Level.SEVERE, null, ex);
