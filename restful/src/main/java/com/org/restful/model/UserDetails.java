@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Table(name="userdetails")
 public class UserDetails implements Serializable {
 
-
+private static final long serialVersionUID = -3009157732242241606L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
