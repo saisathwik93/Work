@@ -52,7 +52,7 @@ public List<UserResponse> getUserResponse(UserDTO userDTO)	{
 
 private void generateResponse(UserInformation ui, UserResponse ur, UserDetails userdetail) {
 	
-	//Generating the user response to be sent to the client
+	//Generating the user response to be sent to the client ..
 	ui=userdetail.getUserInformation();
 	    ur.setId(userdetail.getUserid());
 		ur.setUsername(userdetail.getUsername());
